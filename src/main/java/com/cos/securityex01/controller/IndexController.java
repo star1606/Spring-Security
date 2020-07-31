@@ -1,12 +1,14 @@
 package com.cos.securityex01.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cos.securityex01.config.auth.PrincipalDetails;
 import com.cos.securityex01.model.User;
 import com.cos.securityex01.repository.UserRepository;
 
@@ -26,7 +28,9 @@ public class IndexController {
 	}
 	
 	@GetMapping({"/user"})
-	public @ResponseBody String user() {
+	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principal) { // 세션접근하는법.
+		System.out.println("세션정보" + principal); 
+		System.out.println(principal.getUsername());
 		return "유저 페이지 입니다.";
 	}
 	
@@ -51,6 +55,7 @@ public class IndexController {
 		String rawPassword = user.getPassword();
 		String encPassword = bCryptPasswordEncoder.encode(rawPassword);
 		user.setPassword(encPassword);
+		user.setRole("ROLE_USER");
 		userRepository.save(user);
 		userRepository.save(user);
 		return "redirect:/";

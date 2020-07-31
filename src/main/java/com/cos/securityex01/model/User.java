@@ -30,5 +30,5 @@ public class User {
 	private String email;
 	@CreationTimestamp
 	private Timestamp createDate;
-	
+	private String role;
 }
